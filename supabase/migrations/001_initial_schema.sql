@@ -19,6 +19,8 @@ CREATE TABLE recipes (
     cook_time_minutes INT,
     servings INT DEFAULT 4,
     difficulty TEXT CHECK (difficulty IN ('easy', 'medium', 'hard')),
+    is_favorite BOOLEAN DEFAULT false,
+    is_family_favorite BOOLEAN DEFAULT false,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -30,28 +32,58 @@ CREATE TABLE spices (
     is_common BOOLEAN DEFAULT true
 );
 
--- Seed common spices
+-- Seed spices, oils, sauces, and vinegars
 INSERT INTO spices (name, category) VALUES
-    ('Salt', 'Basic'),
-    ('Black Pepper', 'Basic'),
-    ('Garlic Powder', 'Basic'),
-    ('Onion Powder', 'Basic'),
-    ('Paprika', 'Warm'),
-    ('Cumin', 'Warm'),
-    ('Chili Powder', 'Warm'),
-    ('Cayenne', 'Warm'),
+    -- Basics
+    ('Salt', 'Basics'),
+    ('Black Pepper', 'Basics'),
+    ('Garlic Powder', 'Basics'),
+    ('Onion Powder', 'Basics'),
+    -- Herbs
     ('Oregano', 'Herbs'),
     ('Basil', 'Herbs'),
     ('Thyme', 'Herbs'),
     ('Rosemary', 'Herbs'),
-    ('Cinnamon', 'Sweet'),
-    ('Nutmeg', 'Sweet'),
-    ('Ginger', 'Asian'),
-    ('Turmeric', 'Asian'),
-    ('Curry Powder', 'Asian'),
+    ('Parsley', 'Herbs'),
+    ('Cilantro', 'Herbs'),
+    -- Warm Spices
+    ('Paprika', 'Warm Spices'),
+    ('Cumin', 'Warm Spices'),
+    ('Chili Powder', 'Warm Spices'),
+    ('Cayenne', 'Warm Spices'),
+    ('Ginger', 'Warm Spices'),
+    ('Turmeric', 'Warm Spices'),
+    ('Curry Powder', 'Warm Spices'),
+    ('Cinnamon', 'Warm Spices'),
+    ('Nutmeg', 'Warm Spices'),
+    -- Blends
     ('Italian Seasoning', 'Blends'),
     ('Taco Seasoning', 'Blends'),
-    ('Everything Bagel', 'Blends');
+    ('Everything Bagel', 'Blends'),
+    ('Cajun Seasoning', 'Blends'),
+    ('Greek Seasoning', 'Blends'),
+    -- Oils
+    ('Olive Oil', 'Oils'),
+    ('Vegetable Oil', 'Oils'),
+    ('Sesame Oil', 'Oils'),
+    ('Coconut Oil', 'Oils'),
+    ('Avocado Oil', 'Oils'),
+    ('Butter', 'Oils'),
+    -- Sauces
+    ('Soy Sauce', 'Sauces'),
+    ('Fish Sauce', 'Sauces'),
+    ('Worcestershire', 'Sauces'),
+    ('Hot Sauce', 'Sauces'),
+    ('Sriracha', 'Sauces'),
+    ('Oyster Sauce', 'Sauces'),
+    ('Teriyaki Sauce', 'Sauces'),
+    ('BBQ Sauce', 'Sauces'),
+    -- Vinegars
+    ('White Vinegar', 'Vinegars'),
+    ('Apple Cider Vinegar', 'Vinegars'),
+    ('Balsamic Vinegar', 'Vinegars'),
+    ('Rice Vinegar', 'Vinegars'),
+    ('Red Wine Vinegar', 'Vinegars');
 
 -- Row Level Security
 ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;

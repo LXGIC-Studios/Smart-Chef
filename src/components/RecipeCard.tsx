@@ -4,61 +4,96 @@ import type { Recipe } from "@/lib/types";
 interface RecipeCardProps {
   recipe: Recipe;
   onDelete?: (id: string) => void;
+  onToggleFavorite?: (id: string, isFavorite: boolean) => void;
+  onToggleFamilyFavorite?: (id: string, isFamilyFavorite: boolean) => void;
 }
 
-export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
+export function RecipeCard({ recipe, onDelete, onToggleFavorite, onToggleFamilyFavorite }: RecipeCardProps) {
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
 
   return (
-    <div className="card group">
-      <div className="flex items-start justify-between gap-4">
-        <Link href={`/recipes/${recipe.id}`} className="flex-1">
-          <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
-            {recipe.title}
-          </h3>
-          <p className="text-sm text-muted mt-1 line-clamp-2">
+    <div className="group border-b border-border py-6 sm:py-8 first:pt-0">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+        <Link href={`/recipes/${recipe.id}`} className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-1">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold group-hover:text-accent transition-colors break-words">
+              {recipe.title}
+            </h3>
+            {recipe.is_favorite && (
+              <span className="text-accent text-base sm:text-lg" title="Favorite">★</span>
+            )}
+            {recipe.is_family_favorite && (
+              <span className="text-red-500 text-base sm:text-lg" title="Family Favorite">♥</span>
+            )}
+          </div>
+          <p className="text-muted text-sm sm:text-base mt-2 line-clamp-2">
             {recipe.description}
           </p>
         </Link>
         <span
-          className={`flex-shrink-0 px-2 py-0.5 rounded text-xs font-medium ${
+          className={`self-start shrink-0 px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-wider ${
             recipe.difficulty === "easy"
-              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+              ? "bg-green-500 text-white"
               : recipe.difficulty === "medium"
-              ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-              : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+              ? "bg-yellow-500 text-black"
+              : "bg-red-500 text-white"
           }`}
         >
           {recipe.difficulty}
         </span>
       </div>
 
-      <div className="flex items-center gap-4 mt-4 text-sm text-muted">
-        <span>{totalTime} min total</span>
-        <span>{recipe.servings} servings</span>
-        <span>{recipe.ingredients_input.length} ingredients</span>
-      </div>
-
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
-        <span className="text-xs text-muted">
+      {/* Stats row */}
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4 md:gap-6 mt-4 sm:mt-6 text-xs sm:text-sm">
+        <span className="text-muted">
+          <span className="font-bold text-foreground">{totalTime}</span> min
+        </span>
+        <span className="text-muted">
+          <span className="font-bold text-foreground">{recipe.servings}</span> servings
+        </span>
+        <span className="text-muted hidden sm:inline">
           {new Date(recipe.created_at).toLocaleDateString()}
         </span>
-        <div className="flex gap-2">
-          <Link
-            href={`/recipes/${recipe.id}`}
-            className="text-sm text-primary hover:underline"
+      </div>
+
+      {/* Actions row - separate on mobile */}
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-4 pt-4 border-t border-border sm:border-0 sm:pt-0 sm:mt-3">
+        {onToggleFavorite && (
+          <button
+            onClick={() => onToggleFavorite(recipe.id, !recipe.is_favorite)}
+            className={`font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-colors ${
+              recipe.is_favorite ? "text-accent" : "text-muted hover:text-accent"
+            }`}
+            title={recipe.is_favorite ? "Remove from favorites" : "Add to favorites"}
           >
-            View
-          </Link>
-          {onDelete && (
-            <button
-              onClick={() => onDelete(recipe.id)}
-              className="text-sm text-red-500 hover:underline"
-            >
-              Delete
-            </button>
-          )}
-        </div>
+            {recipe.is_favorite ? "★ Favorite" : "☆ Favorite"}
+          </button>
+        )}
+        {onToggleFamilyFavorite && (
+          <button
+            onClick={() => onToggleFamilyFavorite(recipe.id, !recipe.is_family_favorite)}
+            className={`font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-colors ${
+              recipe.is_family_favorite ? "text-red-500" : "text-muted hover:text-red-500"
+            }`}
+            title={recipe.is_family_favorite ? "Remove from family favorites" : "Add to family favorites"}
+          >
+            {recipe.is_family_favorite ? "♥ Family" : "♡ Family"}
+          </button>
+        )}
+        <Link
+          href={`/recipes/${recipe.id}`}
+          className="font-bold uppercase tracking-wider text-[10px] sm:text-xs hover:text-accent transition-colors"
+        >
+          View
+        </Link>
+        {onDelete && (
+          <button
+            onClick={() => onDelete(recipe.id)}
+            className="font-bold uppercase tracking-wider text-[10px] sm:text-xs text-red-500 hover:text-red-400 transition-colors ml-auto"
+          >
+            Delete
+          </button>
+        )}
       </div>
     </div>
   );

@@ -21,23 +21,23 @@ export function SpiceSelector({ spices, selected, onChange }: SpiceSelectorProps
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-3">
-        Available Spices
+      <label className="label text-xs sm:text-sm block mb-4 sm:mb-6">
+        What do you have available?
       </label>
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         {categories.map((category) => (
-          <div key={category}>
-            <p className="text-sm text-muted mb-2">{category}</p>
-            <div className="flex flex-wrap gap-2">
+          <div key={category} className="space-y-2 sm:space-y-3">
+            <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-muted">{category}</p>
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {spices
                 .filter((s) => s.category === category)
                 .map((spice) => (
                   <label
                     key={spice.id}
-                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm cursor-pointer transition-colors ${
+                    className={`inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 cursor-pointer transition-all text-[10px] sm:text-xs font-medium uppercase tracking-wider border-2 ${
                       selected.includes(spice.name)
-                        ? "bg-primary text-white"
-                        : "bg-accent hover:bg-primary/20"
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-transparent text-foreground border-border hover:border-foreground"
                     }`}
                   >
                     <input

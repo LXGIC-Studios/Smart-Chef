@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   }
 
   const body: GenerateRecipeRequest = await request.json();
-  const { ingredients, spices } = body;
+  const { ingredients, spices, useAllIngredients } = body;
 
   if (!ingredients || ingredients.length < 2) {
     return NextResponse.json(
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const recipe = await generateRecipe(ingredients, spices || []);
+    const recipe = await generateRecipe(ingredients, spices || [], useAllIngredients || false);
     return NextResponse.json(recipe);
   } catch (error) {
     console.error("Recipe generation error:", error);

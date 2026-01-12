@@ -12,47 +12,52 @@ interface RecipeDisplayProps {
 
 export function RecipeDisplay({ recipe, onSave, onNewRecipe, saving, saved }: RecipeDisplayProps) {
   return (
-    <div className="card">
-      <div className="flex items-start justify-between gap-4 mb-4">
-        <div>
-          <h2 className="text-2xl font-bold">{recipe.title}</h2>
-          <p className="text-muted mt-1">{recipe.description}</p>
+    <div>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div className="min-w-0">
+          <p className="label text-xs sm:text-sm mb-2">Your Recipe</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black break-words">{recipe.title}</h2>
+          <p className="text-muted text-sm sm:text-base mt-2 max-w-2xl">{recipe.description}</p>
         </div>
         <span
-          className={`px-3 py-1 rounded-full text-sm font-medium ${
+          className={`self-start shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider ${
             recipe.difficulty === "easy"
-              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+              ? "bg-green-500 text-white"
               : recipe.difficulty === "medium"
-              ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-              : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+              ? "bg-yellow-500 text-black"
+              : "bg-red-500 text-white"
           }`}
         >
           {recipe.difficulty}
         </span>
       </div>
 
-      <div className="flex flex-wrap gap-4 mb-6 text-sm">
-        <div className="flex items-center gap-1">
-          <span className="text-muted">Prep:</span>
-          <span className="font-medium">{recipe.prep_time_minutes} min</span>
+      <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 sm:gap-8 mb-8 sm:mb-12 py-4 sm:py-6 border-y border-border">
+        <div>
+          <p className="label text-[10px] sm:text-xs mb-1">Prep Time</p>
+          <p className="text-lg sm:text-2xl font-bold">{recipe.prep_time_minutes} min</p>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="text-muted">Cook:</span>
-          <span className="font-medium">{recipe.cook_time_minutes} min</span>
+        <div>
+          <p className="label text-[10px] sm:text-xs mb-1">Cook Time</p>
+          <p className="text-lg sm:text-2xl font-bold">{recipe.cook_time_minutes} min</p>
         </div>
-        <div className="flex items-center gap-1">
-          <span className="text-muted">Servings:</span>
-          <span className="font-medium">{recipe.servings}</span>
+        <div>
+          <p className="label text-[10px] sm:text-xs mb-1">Total</p>
+          <p className="text-lg sm:text-2xl font-bold">{recipe.prep_time_minutes + recipe.cook_time_minutes} min</p>
+        </div>
+        <div>
+          <p className="label text-[10px] sm:text-xs mb-1">Servings</p>
+          <p className="text-lg sm:text-2xl font-bold">{recipe.servings}</p>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-8 sm:gap-12 md:gap-16">
         <div>
-          <h3 className="font-semibold mb-3">Ingredients</h3>
-          <ul className="space-y-2">
+          <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Ingredients</h3>
+          <ul className="space-y-3 sm:space-y-4">
             {recipe.ingredients.map((ing, index) => (
-              <li key={index} className="flex gap-2">
-                <span className="font-medium text-primary">{ing.amount}</span>
+              <li key={index} className="flex gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-border text-sm sm:text-base">
+                <span className="font-bold text-accent shrink-0 w-16 sm:w-24">{ing.amount}</span>
                 <span>
                   {ing.item}
                   {ing.note && <span className="text-muted"> ({ing.note})</span>}
@@ -63,41 +68,33 @@ export function RecipeDisplay({ recipe, onSave, onNewRecipe, saving, saved }: Re
         </div>
 
         <div>
-          <h3 className="font-semibold mb-3">Instructions</h3>
-          <ol className="space-y-3">
+          <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Instructions</h3>
+          <ol className="space-y-4 sm:space-y-6">
             {recipe.instructions.map((step, index) => (
-              <li key={index} className="flex gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-white text-sm flex items-center justify-center">
+              <li key={index} className="flex gap-3 sm:gap-4">
+                <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-foreground text-background text-sm sm:text-base font-bold flex items-center justify-center">
                   {index + 1}
                 </span>
-                <span>{step}</span>
+                <span className="pt-1 sm:pt-2 text-sm sm:text-base">{step}</span>
               </li>
             ))}
           </ol>
         </div>
       </div>
 
-      {recipe.tips && (
-        <div className="mt-6 p-4 bg-accent rounded-lg">
-          <p className="text-sm">
-            <span className="font-medium">Chef&apos;s Tip:</span> {recipe.tips}
-          </p>
-        </div>
-      )}
-
-      <div className="flex gap-3 mt-6 pt-6 border-t border-border">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border">
         {onSave && !saved && (
-          <button onClick={onSave} className="btn-primary" disabled={saving}>
+          <button onClick={onSave} className="btn-primary text-sm sm:text-base" disabled={saving}>
             {saving ? "Saving..." : "Save Recipe"}
           </button>
         )}
         {saved && (
-          <span className="text-green-600 dark:text-green-400 font-medium py-2">
+          <span className="text-green-600 font-bold uppercase tracking-wider text-xs sm:text-sm py-3 sm:py-4">
             ✓ Recipe saved
           </span>
         )}
         {onNewRecipe && (
-          <button onClick={onNewRecipe} className="btn-secondary">
+          <button onClick={onNewRecipe} className="btn-secondary text-sm sm:text-base">
             Generate Another
           </button>
         )}

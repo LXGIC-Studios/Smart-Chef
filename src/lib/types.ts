@@ -17,7 +17,8 @@ export interface Recipe {
   cook_time_minutes: number;
   servings: number;
   difficulty: "easy" | "medium" | "hard";
-  tips?: string;
+  is_favorite: boolean;
+  is_family_favorite: boolean;
   created_at: string;
 }
 
@@ -31,6 +32,7 @@ export interface Spice {
 export interface GenerateRecipeRequest {
   ingredients: string[];
   spices: string[];
+  useAllIngredients: boolean;
 }
 
 export interface GenerateRecipeResponse {
@@ -42,7 +44,6 @@ export interface GenerateRecipeResponse {
   difficulty: "easy" | "medium" | "hard";
   ingredients: Ingredient[];
   instructions: string[];
-  tips?: string;
 }
 
 export interface Profile {
