@@ -13,12 +13,16 @@ export function IngredientInput({ ingredients, onChange }: IngredientInputProps)
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" && input.trim()) {
       e.preventDefault();
-      const trimmed = input.trim().toLowerCase();
-      if (!ingredients.includes(trimmed)) {
-        onChange([...ingredients, trimmed]);
-      }
-      setInput("");
+      addIngredient();
     }
+  }
+
+  function addIngredient() {
+    const trimmed = input.trim().toLowerCase();
+    if (trimmed && !ingredients.includes(trimmed)) {
+      onChange([...ingredients, trimmed]);
+    }
+    setInput("");
   }
 
   function removeIngredient(index: number) {
@@ -27,25 +31,34 @@ export function IngredientInput({ ingredients, onChange }: IngredientInputProps)
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-2">
-        Ingredients
+      <label className="label text-xs sm:text-sm block mb-3 sm:mb-4">
+        Your Ingredients
       </label>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Type an ingredient and press Enter"
-        className="input mb-3"
-      />
-      {ingredients.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Type an ingredient..."
+          className="input text-sm sm:text-lg flex-1"
+        />
+        <button
+          type="button"
+          onClick={addIngredient}
+          className="btn-secondary text-xs sm:text-sm px-3 sm:px-4 shrink-0"
+        >
+          Add
+        </button>
+      </div>
+      {ingredients.length > 0 ? (
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-4 sm:mt-6">
           {ingredients.map((ingredient, index) => (
-            <span key={index} className="tag">
+            <span key={index} className="tag text-xs sm:text-sm">
               {ingredient}
               <button
                 onClick={() => removeIngredient(index)}
-                className="ml-1 hover:text-red-500"
+                className="ml-1.5 sm:ml-2 hover:text-accent"
                 aria-label={`Remove ${ingredient}`}
               >
                 ×
@@ -53,9 +66,8 @@ export function IngredientInput({ ingredients, onChange }: IngredientInputProps)
             </span>
           ))}
         </div>
-      )}
-      {ingredients.length === 0 && (
-        <p className="text-sm text-muted">
+      ) : (
+        <p className="text-xs sm:text-sm text-muted mt-3 sm:mt-4">
           Add at least 2-3 ingredients to generate a recipe
         </p>
       )}
