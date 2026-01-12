@@ -47,7 +47,7 @@ export default async function Home() {
       <section className="min-h-screen flex flex-col md:flex-row">
         <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-16 pt-24 sm:pt-32 pb-12 sm:pb-16 md:py-0">
           <div className="md:ml-12 lg:ml-20">
-            <p className="label text-xs sm:text-sm mb-3 sm:mb-4">AI-Powered Recipe Generation</p>
+            <p className="label text-xs sm:text-sm mb-3 sm:mb-4">Smart Recipe Generation</p>
             <h1 className="font-extrabold uppercase leading-[0.9] tracking-tight text-[clamp(2.5rem,12vw,5rem)] md:text-[clamp(2rem,5vw,4.5rem)] lg:text-[clamp(2.5rem,6vw,7rem)] mb-6 sm:mb-8">
               Cook<br />
               <span className="whitespace-nowrap">with what</span><br />
@@ -55,7 +55,7 @@ export default async function Home() {
             </h1>
             <p className="text-muted max-w-md text-base sm:text-lg mb-8 sm:mb-10">
               Enter the ingredients in your kitchen. Select your spices. 
-              Let AI create a delicious recipe tailored just for you.
+              Get a delicious recipe tailored just for you.
             </p>
             <div className="flex gap-4">
               <Link
@@ -106,7 +106,7 @@ export default async function Home() {
               <span className="text-6xl sm:text-7xl md:text-8xl font-black text-border group-hover:text-accent transition-colors">03</span>
               <h3 className="text-xl sm:text-2xl font-bold mt-3 sm:mt-4 mb-2 sm:mb-3">Get Recipe</h3>
               <p className="text-muted text-sm sm:text-base">
-                AI generates a custom recipe with exact measurements in seconds.
+                Get a custom recipe with exact measurements in seconds.
               </p>
             </div>
           </div>

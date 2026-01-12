@@ -32,7 +32,6 @@ export interface Spice {
 export interface GenerateRecipeRequest {
   ingredients: string[];
   spices: string[];
-  useAllIngredients: boolean;
 }
 
 export interface GenerateRecipeResponse {

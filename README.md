@@ -1,13 +1,10 @@
-# Smart Chef 
+# Smart Chef
 
-AI-powered recipe generation app that creates personalized recipes based on the ingredients you have at home.
+Recipe generation app that creates personalized recipes based on the ingredients you have at home.
 
 ## Features
 
-- **AI Recipe Generation** - Enter your ingredients, select your spices, and let AI create a delicious recipe tailored to your kitchen
-- **Two Recipe Modes**
-  - *Use Every Ingredient* - AI uses ALL ingredients you list (great for using up everything)
-  - *Best Meal Possible* - AI picks the best combination for a delicious meal
+- **Smart Recipe Generation** - Enter your ingredients, select your spices, and get a delicious recipe tailored to your kitchen
 - **Recipe Storage** - Save generated recipes to your personal collection
 - **Favorites System** - Mark recipes as favorites or family favorites for easy organization
 - **User Authentication** - Secure login with email/password or Google OAuth

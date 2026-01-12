@@ -34,7 +34,7 @@ export default function TermsPage() {
           <section>
             <h2 className="heading-md mb-4">2. Description of Service</h2>
             <p className="text-muted leading-relaxed">
-              Smart Chef is an AI-powered recipe generation platform that creates personalized recipes based on ingredients and spices you provide. The service uses artificial intelligence to suggest recipes and does not guarantee specific nutritional outcomes or dietary compliance.
+              Smart Chef is a recipe generation platform that creates personalized recipes based on ingredients and spices you provide. The service suggests recipes and does not guarantee specific nutritional outcomes or dietary compliance.
             </p>
           </section>
 

@@ -18,7 +18,6 @@ export default function GeneratePage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
   const [userEmail, setUserEmail] = useState<string>();
-  const [useAllIngredients, setUseAllIngredients] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
@@ -54,7 +53,6 @@ export default function GeneratePage() {
       body: JSON.stringify({
         ingredients,
         spices: selectedSpices,
-        useAllIngredients,
       }),
     });
 
@@ -117,6 +115,9 @@ export default function GeneratePage() {
                   ingredients={ingredients}
                   onChange={setIngredients}
                 />
+                <p className="text-xs sm:text-sm text-muted mt-4">
+                  <span className="text-foreground font-medium">Note:</span> We&apos;ll try to use all your ingredients, but may exclude items that don&apos;t work together.
+                </p>
               </div>
 
               {spices.length > 0 && (
@@ -128,39 +129,6 @@ export default function GeneratePage() {
                   />
                 </div>
               )}
-
-              <div className="pb-8 sm:pb-12 border-b border-border">
-                <label className="label text-xs sm:text-sm block mb-3 sm:mb-4">Recipe Mode</label>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setUseAllIngredients(true)}
-                    className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold uppercase tracking-wider border-2 transition-all ${
-                      useAllIngredients
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-transparent text-foreground border-border hover:border-foreground"
-                    }`}
-                  >
-                    Use Every Ingredient
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setUseAllIngredients(false)}
-                    className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold uppercase tracking-wider border-2 transition-all ${
-                      !useAllIngredients
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-transparent text-foreground border-border hover:border-foreground"
-                    }`}
-                  >
-                    Best Meal Possible
-                  </button>
-                </div>
-                <p className="text-xs sm:text-sm text-muted mt-2 sm:mt-3">
-                  {useAllIngredients 
-                    ? "AI will use ALL ingredients you listed - great for using up everything" 
-                    : "AI will pick the best combination for a delicious meal"}
-                </p>
-              </div>
 
               {error && (
                 <p className="text-accent font-medium text-sm sm:text-base">{error}</p>

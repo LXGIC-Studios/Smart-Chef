@@ -1,41 +1,23 @@
 import OpenAI from "openai";
 import type { GenerateRecipeResponse } from "./types";
 
-const USE_ALL_PROMPT = `You are a professional chef assistant. Generate a recipe that uses ALL of the ingredients provided.
+const RECIPE_PROMPT = `You are a professional chef assistant. Generate a delicious recipe.
 
-INGREDIENTS TO USE (you MUST use ALL of these - the user wants to use up everything):
+MAIN INGREDIENTS (the user has these - try to use ALL of them):
 {ingredients}
 
-AVAILABLE SPICES:
-{spices}
-
-STRICT REQUIREMENTS:
-- You MUST use EVERY single ingredient listed above - no exceptions
-- Use ingredients EXACTLY as listed (fresh, not canned/frozen unless specified)
-- Do NOT add ANY ingredients the user didn't list (no oil, butter, etc. unless listed)
-- Only exception: water and the spices listed above
-- Include exact measurements
-- Provide clear step-by-step instructions
-- Estimate prep time, cook time, and servings
-
-RESPOND ONLY WITH VALID JSON IN THIS EXACT FORMAT:`;
-
-const BEST_MEAL_PROMPT = `You are a professional chef assistant. Generate the best possible recipe using some or all of the available ingredients.
-
-AVAILABLE INGREDIENTS (use these EXACTLY as listed - fresh ingredients):
-{ingredients}
-
-AVAILABLE SPICES:
+AVAILABLE SEASONINGS (oils, spices, sauces the user has - pick the BEST ones for this dish, not all):
 {spices}
 
 REQUIREMENTS:
-- Create the BEST tasting recipe possible using the available ingredients
-- You may choose which ingredients to use - pick what makes sense together
-- Use ingredients EXACTLY as listed (fresh, not canned/frozen unless specified)
-- You may suggest 1-2 common pantry staples (oil, butter, salt) if needed
+- Try to incorporate ALL the main ingredients listed above
+- From the seasonings list, pick only what makes sense for the dish (don't use everything)
+- Use ingredients EXACTLY as listed (if they say "tomatoes" use fresh tomatoes, not canned)
+- You may add basic pantry items like water, salt, pepper if not listed
 - Include exact measurements
 - Provide clear step-by-step instructions
 - Estimate prep time, cook time, and servings
+- Keep it practical and delicious
 
 RESPOND ONLY WITH VALID JSON IN THIS EXACT FORMAT:
 {
@@ -56,8 +38,7 @@ RESPOND ONLY WITH VALID JSON IN THIS EXACT FORMAT:
 
 export async function generateRecipe(
   ingredients: string[],
-  spices: string[],
-  useAllIngredients: boolean = false
+  spices: string[]
 ): Promise<GenerateRecipeResponse> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -66,11 +47,9 @@ export async function generateRecipe(
 
   const openai = new OpenAI({ apiKey });
 
-  const basePrompt = useAllIngredients ? USE_ALL_PROMPT : BEST_MEAL_PROMPT;
-  const prompt = basePrompt.replace(
-    "{ingredients}",
-    ingredients.join(", ")
-  ).replace("{spices}", spices.length > 0 ? spices.join(", ") : "None specified");
+  const prompt = RECIPE_PROMPT
+    .replace("{ingredients}", ingredients.join(", "))
+    .replace("{spices}", spices.length > 0 ? spices.join(", ") : "None specified - use basic seasonings");
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",

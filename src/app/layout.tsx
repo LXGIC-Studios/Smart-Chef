@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Smart Chef - AI Recipe Generator",
+  title: "Smart Chef - Recipe Generator",
   description: "Generate delicious recipes based on ingredients you have at home",
 };
 
