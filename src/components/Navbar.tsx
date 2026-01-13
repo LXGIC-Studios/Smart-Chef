@@ -31,34 +31,54 @@ export function Navbar({ userEmail }: NavbarProps) {
           priority
         />
       </Link>
-      <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
-        <Link href="/generate" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
-          Generate
-        </Link>
-        <Link href="/plan" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
-          Plan
-        </Link>
-        <Link href="/recipes" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
-          Recipes
-        </Link>
-        <Link href="/meal-plans" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
-          My Plans
-        </Link>
-        <Link href="/shopping" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
-          Shopping
-        </Link>
-        <Link href="/calendar" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
-          Calendar
-        </Link>
-        {userEmail && (
+      <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+        {userEmail ? (
           <>
-            <Link href="/settings/diet" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
+            {/* Logged in - show all features */}
+            <Link href="/generate" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
+              Generate
+            </Link>
+            <Link href="/plan" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
+              Plan
+            </Link>
+            <Link href="/calendar" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors hidden sm:block">
+              Calendar
+            </Link>
+            <Link href="/shopping" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors hidden sm:block">
+              Shopping
+            </Link>
+            <Link href="/recipes" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
+              Recipes
+            </Link>
+            <Link href="/meal-plans" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors hidden md:block">
+              My Plans
+            </Link>
+            <Link href="/settings/diet" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors hidden md:block">
               Settings
             </Link>
-            <span className="text-sm text-muted hidden lg:inline">{userEmail}</span>
-            <button onClick={handleLogout} className="btn-secondary text-xs px-2 sm:px-4 py-1.5 sm:py-2">
+            <span className="text-xs text-muted hidden lg:inline">{userEmail}</span>
+            <button onClick={handleLogout} className="btn-secondary text-xs px-2 sm:px-3 py-1.5">
               Log Out
             </button>
+          </>
+        ) : (
+          <>
+            {/* Logged out - show key features + auth buttons */}
+            <Link href="/login" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
+              Generate
+            </Link>
+            <Link href="/login" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors">
+              Meal Plan
+            </Link>
+            <Link href="/login" className="text-xs sm:text-sm font-medium hover:text-accent transition-colors hidden sm:block">
+              Calendar
+            </Link>
+            <Link href="/login" className="btn-secondary text-xs px-2 sm:px-3 py-1.5">
+              Log In
+            </Link>
+            <Link href="/signup" className="btn-primary text-xs px-2 sm:px-3 py-1.5">
+              Sign Up
+            </Link>
           </>
         )}
       </div>

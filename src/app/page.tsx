@@ -21,28 +21,37 @@ export default async function Home() {
             priority
           />
         </Link>
-        <div className="flex gap-2 sm:gap-4">
+        <div className="flex gap-2 sm:gap-3">
           {user ? (
             <>
-              <Link href="/generate" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-4 py-1.5 sm:py-2">
+              <Link href="/generate" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-3 py-1.5">
                 Generate
               </Link>
-              <Link href="/plan" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-4 py-1.5 sm:py-2">
+              <Link href="/plan" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-3 py-1.5">
                 Plan
               </Link>
-              <Link href="/calendar" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-4 py-1.5 sm:py-2 hidden sm:inline-block">
+              <Link href="/calendar" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-3 py-1.5 hidden sm:inline-block">
                 Calendar
               </Link>
-              <Link href="/recipes" className="btn-primary text-[10px] sm:text-xs px-2 sm:px-4 py-1.5 sm:py-2">
-                Dashboard
+              <Link href="/shopping" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-3 py-1.5 hidden md:inline-block">
+                Shopping
+              </Link>
+              <Link href="/recipes" className="btn-primary text-[10px] sm:text-xs px-2 sm:px-3 py-1.5">
+                My Recipes
               </Link>
             </>
           ) : (
             <>
-              <Link href="/login" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-4 py-1.5 sm:py-2">
+              <Link href="/login" className="text-[10px] sm:text-xs font-medium hover:text-accent transition-colors px-2">
+                Generate
+              </Link>
+              <Link href="/login" className="text-[10px] sm:text-xs font-medium hover:text-accent transition-colors px-2 hidden sm:inline">
+                Meal Plan
+              </Link>
+              <Link href="/login" className="btn-secondary text-[10px] sm:text-xs px-2 sm:px-3 py-1.5">
                 Log In
               </Link>
-              <Link href="/signup" className="btn-primary text-[10px] sm:text-xs px-2 sm:px-4 py-1.5 sm:py-2">
+              <Link href="/signup" className="btn-primary text-[10px] sm:text-xs px-2 sm:px-3 py-1.5">
                 Sign Up
               </Link>
             </>
@@ -156,7 +165,7 @@ export default async function Home() {
       </section>
 
       {/* Features Grid - Main Tools */}
-      <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-16">
+      <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-16 bg-card">
         <div className="max-w-7xl mx-auto">
           <p className="label text-xs sm:text-sm mb-3 sm:mb-4">Your Kitchen Tools</p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight mb-10 sm:mb-16">
@@ -167,63 +176,75 @@ export default async function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Quick Recipe */}
-            <Link href={user ? "/generate" : "/signup"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
+            <Link href={user ? "/generate" : "/login"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
               <span className="text-4xl sm:text-5xl mb-4 block">🍳</span>
               <h3 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-accent transition-colors">Quick Recipe</h3>
               <p className="text-muted text-sm sm:text-base mb-4">
                 Enter ingredients you have and get a recipe instantly. Perfect for using up what&apos;s in your fridge.
               </p>
-              <span className="text-accent text-sm font-bold uppercase tracking-wider">Generate →</span>
+              <span className="text-accent text-sm font-bold uppercase tracking-wider">
+                {user ? "Generate →" : "Sign In →"}
+              </span>
             </Link>
 
             {/* Meal Plan Wizard */}
-            <Link href={user ? "/plan" : "/signup"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
+            <Link href={user ? "/plan" : "/login"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
               <span className="text-4xl sm:text-5xl mb-4 block">📅</span>
               <h3 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-accent transition-colors">Meal Plan Wizard</h3>
               <p className="text-muted text-sm sm:text-base mb-4">
                 Plan your week with a step-by-step wizard. Get full recipes, grocery lists, and prep instructions.
               </p>
-              <span className="text-accent text-sm font-bold uppercase tracking-wider">Start Planning →</span>
+              <span className="text-accent text-sm font-bold uppercase tracking-wider">
+                {user ? "Start Planning →" : "Sign In →"}
+              </span>
             </Link>
 
             {/* Meal Calendar */}
-            <Link href={user ? "/calendar" : "/signup"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
+            <Link href={user ? "/calendar" : "/login"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
               <span className="text-4xl sm:text-5xl mb-4 block">🗓️</span>
               <h3 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-accent transition-colors">Meal Calendar</h3>
               <p className="text-muted text-sm sm:text-base mb-4">
                 Schedule meals on your weekly calendar. Drag recipes onto days and see your whole week at a glance.
               </p>
-              <span className="text-accent text-sm font-bold uppercase tracking-wider">View Calendar →</span>
+              <span className="text-accent text-sm font-bold uppercase tracking-wider">
+                {user ? "View Calendar →" : "Sign In →"}
+              </span>
             </Link>
 
             {/* Shopping List */}
-            <Link href={user ? "/shopping" : "/signup"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
+            <Link href={user ? "/shopping" : "/login"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
               <span className="text-4xl sm:text-5xl mb-4 block">🛒</span>
               <h3 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-accent transition-colors">Shopping List</h3>
               <p className="text-muted text-sm sm:text-base mb-4">
                 Aggregate ingredients from recipes and meal plans. Check items off as you shop.
               </p>
-              <span className="text-accent text-sm font-bold uppercase tracking-wider">View List →</span>
+              <span className="text-accent text-sm font-bold uppercase tracking-wider">
+                {user ? "View List →" : "Sign In →"}
+              </span>
             </Link>
 
             {/* Saved Recipes */}
-            <Link href={user ? "/recipes" : "/signup"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
+            <Link href={user ? "/recipes" : "/login"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
               <span className="text-4xl sm:text-5xl mb-4 block">📖</span>
               <h3 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-accent transition-colors">My Recipes</h3>
               <p className="text-muted text-sm sm:text-base mb-4">
                 Access all your saved recipes. Mark favorites and family favorites for quick access.
               </p>
-              <span className="text-accent text-sm font-bold uppercase tracking-wider">View Recipes →</span>
+              <span className="text-accent text-sm font-bold uppercase tracking-wider">
+                {user ? "View Recipes →" : "Sign In →"}
+              </span>
             </Link>
 
             {/* Diet Profile */}
-            <Link href={user ? "/settings/diet" : "/signup"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
+            <Link href={user ? "/settings/diet" : "/login"} className="group border border-border hover:border-accent p-6 sm:p-8 transition-all hover:bg-card">
               <span className="text-4xl sm:text-5xl mb-4 block">⚙️</span>
               <h3 className="text-xl sm:text-2xl font-bold mb-2 group-hover:text-accent transition-colors">Diet Profile</h3>
               <p className="text-muted text-sm sm:text-base mb-4">
                 Set your dietary preferences once. They&apos;ll auto-apply to every recipe you generate.
               </p>
-              <span className="text-accent text-sm font-bold uppercase tracking-wider">Set Up →</span>
+              <span className="text-accent text-sm font-bold uppercase tracking-wider">
+                {user ? "Set Up →" : "Sign In →"}
+              </span>
             </Link>
           </div>
         </div>
