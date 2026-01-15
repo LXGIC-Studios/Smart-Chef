@@ -103,7 +103,7 @@ export default function MealPrepPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <Navbar userEmail={userEmail} />
+      <Navbar />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
         {!plan ? (

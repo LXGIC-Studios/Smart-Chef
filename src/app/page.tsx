@@ -38,7 +38,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <Navbar userEmail={userEmail || undefined} />
+      <Navbar />
 
       <section className="min-h-screen flex flex-col md:flex-row pt-16">
         <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-6 md:px-16 pt-8 sm:pt-12 pb-12 sm:pb-16 md:py-0">

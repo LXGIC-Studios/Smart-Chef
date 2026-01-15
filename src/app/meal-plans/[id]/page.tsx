@@ -97,7 +97,7 @@ export default function MealPlanDetailPage({ params }: { params: Promise<{ id: s
   if (loading) {
     return (
       <main className="min-h-screen bg-background">
-        <Navbar userEmail={userEmail} />
+        <Navbar />
         <div className="max-w-5xl mx-auto px-6 md:px-8 py-24 text-center">
           <p className="text-muted uppercase tracking-wider text-sm">Loading...</p>
         </div>
@@ -108,7 +108,7 @@ export default function MealPlanDetailPage({ params }: { params: Promise<{ id: s
   if (!plan) {
     return (
       <main className="min-h-screen bg-background">
-        <Navbar userEmail={userEmail} />
+        <Navbar />
         <div className="max-w-5xl mx-auto px-6 md:px-8 py-24 text-center">
           <p className="text-muted mb-6">Meal plan not found</p>
           <Link href="/meal-plans" className="btn-primary">
@@ -123,7 +123,7 @@ export default function MealPlanDetailPage({ params }: { params: Promise<{ id: s
 
   return (
     <main className="min-h-screen bg-background">
-      <Navbar userEmail={userEmail} />
+      <Navbar />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
         <Link 
