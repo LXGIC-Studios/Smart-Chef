@@ -132,7 +132,7 @@ export default function ShoppingPage() {
   if (loading) {
     return (
       <main className="min-h-screen bg-background">
-        <Navbar userEmail={userEmail} />
+        <Navbar />
         <div className="max-w-3xl mx-auto px-6 py-24 text-center">
           <p className="text-muted uppercase tracking-wider text-sm">Loading...</p>
         </div>
@@ -142,7 +142,7 @@ export default function ShoppingPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <Navbar userEmail={userEmail} />
+      <Navbar />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">

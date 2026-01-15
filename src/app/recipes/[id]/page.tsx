@@ -71,7 +71,7 @@ export default function RecipeDetailPage({ params }: { params: Promise<{ id: str
   if (loading) {
     return (
       <main className="min-h-screen bg-background">
-        <Navbar userEmail={userEmail} />
+        <Navbar />
         <div className="max-w-5xl mx-auto px-6 md:px-8 py-24 text-center">
           <p className="text-muted uppercase tracking-wider text-sm">Loading...</p>
         </div>
@@ -82,7 +82,7 @@ export default function RecipeDetailPage({ params }: { params: Promise<{ id: str
   if (!recipe) {
     return (
       <main className="min-h-screen bg-background">
-        <Navbar userEmail={userEmail} />
+        <Navbar />
         <div className="max-w-5xl mx-auto px-6 md:px-8 py-24 text-center">
           <p className="text-muted mb-6">Recipe not found</p>
           <Link href="/recipes" className="btn-primary">
@@ -95,7 +95,7 @@ export default function RecipeDetailPage({ params }: { params: Promise<{ id: str
 
   return (
     <main className="min-h-screen bg-background">
-      <Navbar userEmail={userEmail} />
+      <Navbar />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
         <Link 
