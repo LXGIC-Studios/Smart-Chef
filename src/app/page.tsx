@@ -509,13 +509,14 @@ function FeatureCard({ href, icon, title, description, cta, index }: {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
+      className="h-full"
     >
-      <Link href={href} className="group border border-background/20 hover:border-accent p-6 sm:p-8 transition-all hover:bg-background/5 block">
+      <Link href={href} className="group border border-background/20 hover:border-accent p-6 sm:p-8 transition-all hover:bg-background/5 flex flex-col h-full">
         <div className="w-12 h-12 border-2 border-accent flex items-center justify-center mb-4">
           {icon}
         </div>
         <h3 className="font-display text-xl sm:text-2xl font-bold mb-2 group-hover:text-accent transition-colors">{title}</h3>
-        <p className="text-background/70 text-sm sm:text-base mb-4">{description}</p>
+        <p className="text-background/70 text-sm sm:text-base mb-4 flex-grow">{description}</p>
         <span className="text-accent text-sm font-bold uppercase tracking-wider font-mono">{cta}</span>
       </Link>
     </motion.div>
