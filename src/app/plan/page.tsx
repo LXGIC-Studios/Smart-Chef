@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { createClient } from "@/lib/supabase/client";
-import { useEffect } from "react";
 
 const PLAN_TYPES = [
   { 
@@ -303,30 +303,39 @@ export default function PlanPage() {
   const selectedPlan = PLAN_TYPES.find(p => p.id === planType);
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pt-20">
       <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
         
         {/* Header */}
         {step === 1 && (
-          <div className="mb-12 text-center">
+          <motion.div 
+            className="mb-12 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <span className="text-5xl sm:text-6xl mb-4 block">📅</span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">
-              Meal Plan <span className="text-accent">Wizard</span>
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+              Meal Plan <span className="text-accent glow-signal">Wizard</span>
             </h1>
-            <p className="text-muted text-lg max-w-xl mx-auto">
+            <p className="font-mono text-sm text-muted max-w-xl mx-auto">
               Create a complete meal prep plan with full recipes, grocery lists, and prep instructions in just 6 steps.
             </p>
-          </div>
+            <p className="font-mono text-xs text-accent/50 mt-4 uppercase tracking-[0.2em]">by Lxgic Studios</p>
+          </motion.div>
         )}
 
         {/* Progress indicator */}
         {step < 7 && (
           <div className="flex gap-1 mb-8">
             {[1, 2, 3, 4, 5, 6].map((s) => (
-              <div
+              <motion.div
                 key={s}
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ duration: 0.3, delay: s * 0.05 }}
                 className={`h-1 flex-1 ${s <= step ? "bg-accent" : "bg-border"}`}
               />
             ))}
@@ -335,49 +344,57 @@ export default function PlanPage() {
 
         {/* Step 1: Choose Plan Type */}
         {step === 1 && (
-          <div>
-            <h2 className="text-xl sm:text-2xl font-bold mb-2">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="font-display text-xl sm:text-2xl font-bold mb-2">
               How do you want to approach your week?
             </h2>
-            <p className="text-muted mb-6">Choose your cooking style.</p>
+            <p className="font-mono text-sm text-muted mb-6">Choose your cooking style.</p>
 
             <div className="space-y-3">
               {PLAN_TYPES.map((plan, index) => (
-                <button
+                <motion.button
                   key={plan.id}
                   onClick={() => setPlanType(plan.id)}
-                  className={`w-full p-5 sm:p-6 text-left border-2 transition-all ${
+                  className={`w-full p-5 sm:p-6 text-left border transition-all ${
                     planType === plan.id
                       ? "border-accent bg-accent/10"
-                      : "border-border hover:border-foreground"
+                      : "border-border hover:border-accent bg-card/30"
                   }`}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                 >
                   <div className="flex items-start gap-5">
-                    <span className={`text-4xl sm:text-5xl font-black leading-none ${
+                    <span className={`font-mono text-4xl sm:text-5xl font-bold leading-none ${
                       planType === plan.id ? "text-accent" : "text-border"
                     }`}>
                       {String(index + 1).padStart(2, '0')}
                     </span>
                     <div className="flex-1 pt-1">
-                      <span className="text-lg font-bold block">{plan.label}</span>
-                      <span className="text-sm text-muted block mb-1">{plan.desc}</span>
-                      <span className="text-xs text-accent">{plan.details}</span>
+                      <span className="font-display text-lg font-bold block">{plan.label}</span>
+                      <span className="font-mono text-xs text-muted block mb-1">{plan.desc}</span>
+                      <span className="font-mono text-xs text-accent">{plan.details}</span>
                     </div>
                   </div>
-                </button>
+                </motion.button>
               ))}
             </div>
 
             <div className="mt-8 flex justify-end">
-              <button
+              <motion.button
                 onClick={() => setStep(2)}
                 disabled={!planType}
-                className="btn-primary"
+                className="px-8 py-4 bg-accent hover:bg-accent/90 text-white font-mono text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Next →
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Step 2: How many people & days */}

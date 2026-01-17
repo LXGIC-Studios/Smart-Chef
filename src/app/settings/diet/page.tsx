@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { createClient } from "@/lib/supabase/client";
 import type { DietProfile } from "@/lib/types";
@@ -27,14 +28,12 @@ const EQUIPMENT_OPTIONS = [
 ];
 
 export default function DietSettingsPage() {
-  const [userEmail, setUserEmail] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
-  // Profile state
   const [dietaryRestrictions, setDietaryRestrictions] = useState<string[]>([]);
   const [cuisinePreferences, setCuisinePreferences] = useState<string[]>([]);
   const [proteinPreferences, setProteinPreferences] = useState<string[]>([]);
@@ -50,7 +49,6 @@ export default function DietSettingsPage() {
         router.push("/login");
         return;
       }
-      setUserEmail(user.email);
 
       const res = await fetch("/api/diet-profile");
       if (res.ok) {
@@ -101,169 +99,232 @@ export default function DietSettingsPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background pt-20">
         <Navbar />
         <div className="max-w-3xl mx-auto px-6 py-24 text-center">
-          <p className="text-muted uppercase tracking-wider text-sm">Loading...</p>
+          <motion.div
+            className="flex items-center justify-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <motion.span
+              className="w-5 h-5 border-2 border-accent/30 border-t-accent rounded-full"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+            <span className="font-mono text-xs uppercase tracking-widest text-muted">Loading...</span>
+          </motion.div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pt-20">
       <Navbar />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12">
-        <div className="mb-8">
-          <p className="label text-xs sm:text-sm mb-2">Personalization</p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black leading-[0.9]">
+        <motion.div 
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <motion.div
+              className="w-2 h-2 rounded-full bg-success"
+              animate={{ opacity: [1, 0.4, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">Personalization</span>
+          </div>
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold leading-[0.9]">
             Diet
             <br />
-            <span className="text-accent">Profile</span>
+            <span className="text-accent glow-signal">Profile</span>
           </h1>
-          <p className="text-muted mt-4">
-            Set your preferences once and they&apos;ll auto-apply to recipe and meal plan generation.
+          <p className="font-mono text-sm text-muted mt-4">
+            <span className="text-accent">$</span> Set your preferences once and they&apos;ll auto-apply to recipe and meal plan generation.
           </p>
-        </div>
+        </motion.div>
 
         {/* Dietary Restrictions */}
-        <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">Dietary Restrictions</h2>
+        <SettingsSection title="Dietary Restrictions" delay={0.1}>
           <div className="flex flex-wrap gap-2">
             {DIETARY_OPTIONS.map(opt => (
-              <button
+              <ToggleButton
                 key={opt}
+                label={opt}
+                active={dietaryRestrictions.includes(opt)}
                 onClick={() => toggleItem(dietaryRestrictions, setDietaryRestrictions, opt)}
-                className={`px-3 py-1.5 text-sm font-medium border transition-colors ${
-                  dietaryRestrictions.includes(opt)
-                    ? "bg-accent text-white border-accent"
-                    : "border-border hover:border-foreground"
-                }`}
-              >
-                {opt}
-              </button>
+              />
             ))}
           </div>
-        </section>
+        </SettingsSection>
 
         {/* Cuisine Preferences */}
-        <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">Favorite Cuisines</h2>
-          <p className="text-sm text-muted mb-3">Select cuisines you enjoy for recipe suggestions</p>
+        <SettingsSection title="Favorite Cuisines" subtitle="Select cuisines you enjoy for recipe suggestions" delay={0.2}>
           <div className="flex flex-wrap gap-2">
             {CUISINE_OPTIONS.map(opt => (
-              <button
+              <ToggleButton
                 key={opt}
+                label={opt}
+                active={cuisinePreferences.includes(opt)}
                 onClick={() => toggleItem(cuisinePreferences, setCuisinePreferences, opt)}
-                className={`px-3 py-1.5 text-sm font-medium border transition-colors ${
-                  cuisinePreferences.includes(opt)
-                    ? "bg-accent text-white border-accent"
-                    : "border-border hover:border-foreground"
-                }`}
-              >
-                {opt}
-              </button>
+              />
             ))}
           </div>
-        </section>
+        </SettingsSection>
 
         {/* Protein Preferences */}
-        <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">Protein Preferences</h2>
-          <p className="text-sm text-muted mb-3">Proteins you typically cook with</p>
+        <SettingsSection title="Protein Preferences" subtitle="Proteins you typically cook with" delay={0.3}>
           <div className="flex flex-wrap gap-2">
             {PROTEIN_OPTIONS.map(opt => (
-              <button
+              <ToggleButton
                 key={opt}
+                label={opt}
+                active={proteinPreferences.includes(opt)}
                 onClick={() => toggleItem(proteinPreferences, setProteinPreferences, opt)}
-                className={`px-3 py-1.5 text-sm font-medium border transition-colors ${
-                  proteinPreferences.includes(opt)
-                    ? "bg-accent text-white border-accent"
-                    : "border-border hover:border-foreground"
-                }`}
-              >
-                {opt}
-              </button>
+              />
             ))}
           </div>
-        </section>
+        </SettingsSection>
 
         {/* Disliked Ingredients */}
-        <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">Disliked Ingredients</h2>
-          <p className="text-sm text-muted mb-3">Ingredients you want to avoid (comma-separated)</p>
+        <SettingsSection title="Disliked Ingredients" subtitle="Ingredients you want to avoid (comma-separated)" delay={0.4}>
           <input
             type="text"
             value={dislikedIngredients}
             onChange={(e) => { setDislikedIngredients(e.target.value); setSaved(false); }}
             placeholder="e.g., mushrooms, olives, cilantro"
-            className="w-full bg-transparent border border-border px-4 py-3 focus:outline-none focus:border-foreground"
+            className="w-full bg-card/50 border border-border px-4 py-3 font-mono text-sm focus:outline-none focus:border-accent transition-colors"
           />
-        </section>
+        </SettingsSection>
 
         {/* Kitchen Equipment */}
-        <section className="mb-10">
-          <h2 className="text-xl font-bold mb-4">Kitchen Equipment</h2>
-          <p className="text-sm text-muted mb-3">Special equipment you have available</p>
+        <SettingsSection title="Kitchen Equipment" subtitle="Special equipment you have available" delay={0.5}>
           <div className="flex flex-wrap gap-2">
             {EQUIPMENT_OPTIONS.map(opt => (
-              <button
+              <ToggleButton
                 key={opt}
+                label={opt}
+                active={kitchenEquipment.includes(opt)}
                 onClick={() => toggleItem(kitchenEquipment, setKitchenEquipment, opt)}
-                className={`px-3 py-1.5 text-sm font-medium border transition-colors ${
-                  kitchenEquipment.includes(opt)
-                    ? "bg-accent text-white border-accent"
-                    : "border-border hover:border-foreground"
-                }`}
-              >
-                {opt}
-              </button>
+              />
             ))}
           </div>
-        </section>
+        </SettingsSection>
 
         {/* Calorie Target & Budget Mode */}
-        <section className="mb-10 grid sm:grid-cols-2 gap-6">
+        <motion.div 
+          className="mb-10 grid sm:grid-cols-2 gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
           <div>
-            <h2 className="text-xl font-bold mb-4">Daily Calorie Target</h2>
+            <h2 className="font-display text-lg font-bold mb-4">Daily Calorie Target</h2>
             <input
               type="number"
               value={calorieTarget}
               onChange={(e) => { setCalorieTarget(e.target.value ? parseInt(e.target.value) : ""); setSaved(false); }}
               placeholder="e.g., 2000"
-              className="w-full bg-transparent border border-border px-4 py-3 focus:outline-none focus:border-foreground"
+              className="w-full bg-card/50 border border-border px-4 py-3 font-mono text-sm focus:outline-none focus:border-accent transition-colors"
             />
           </div>
           <div>
-            <h2 className="text-xl font-bold mb-4">Budget Mode</h2>
-            <button
+            <h2 className="font-display text-lg font-bold mb-4">Budget Mode</h2>
+            <motion.button
               onClick={() => { setBudgetMode(!budgetMode); setSaved(false); }}
-              className={`w-full px-4 py-3 text-sm font-medium border transition-colors ${
+              className={`w-full px-4 py-3 font-mono text-xs uppercase tracking-wider border transition-colors ${
                 budgetMode
                   ? "bg-accent text-white border-accent"
-                  : "border-border hover:border-foreground"
+                  : "border-border hover:border-accent"
               }`}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
             >
               {budgetMode ? "✓ Enabled - Prefer affordable ingredients" : "Disabled"}
-            </button>
+            </motion.button>
           </div>
-        </section>
+        </motion.div>
 
         {/* Save Button */}
-        <div className="flex gap-4 pt-6 border-t border-border">
-          <button
+        <motion.div 
+          className="flex gap-4 pt-6 border-t border-border"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+        >
+          <motion.button
             onClick={handleSave}
             disabled={saving}
-            className={`btn-primary ${saved ? "bg-green-600 border-green-600" : ""}`}
+            className={`px-8 py-3 font-mono text-sm uppercase tracking-wider transition-colors ${
+              saved 
+                ? "bg-success text-black" 
+                : "bg-accent text-white hover:bg-accent/90"
+            } disabled:opacity-50`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            {saving ? "Saving..." : saved ? "✓ Saved" : "Save Profile"}
-          </button>
-          <button onClick={() => router.back()} className="btn-secondary">
+            {saving ? (
+              <span className="flex items-center gap-2">
+                <motion.span
+                  className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                />
+                Saving...
+              </span>
+            ) : saved ? "✓ Saved" : "Save Profile"}
+          </motion.button>
+          <motion.button 
+            onClick={() => router.back()} 
+            className="px-8 py-3 border border-border hover:border-accent font-mono text-sm uppercase tracking-wider transition-colors"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
             Back
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     </main>
+  );
+}
+
+function SettingsSection({ title, subtitle, delay, children }: { 
+  title: string; 
+  subtitle?: string; 
+  delay: number; 
+  children: React.ReactNode;
+}) {
+  return (
+    <motion.section 
+      className="mb-10"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay }}
+    >
+      <h2 className="font-display text-lg font-bold mb-2">{title}</h2>
+      {subtitle && <p className="font-mono text-xs text-muted mb-3">{subtitle}</p>}
+      {children}
+    </motion.section>
+  );
+}
+
+function ToggleButton({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+  return (
+    <motion.button
+      onClick={onClick}
+      className={`px-3 py-1.5 font-mono text-xs border transition-colors ${
+        active
+          ? "bg-accent text-white border-accent"
+          : "border-border hover:border-accent"
+      }`}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      {label}
+    </motion.button>
   );
 }

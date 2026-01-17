@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import type { Spice } from "@/lib/types";
 
 interface SpiceSelectorProps {
@@ -21,24 +22,32 @@ export function SpiceSelector({ spices, selected, onChange }: SpiceSelectorProps
 
   return (
     <div>
-      <label className="label text-xs sm:text-sm block mb-4 sm:mb-6">
+      <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted block mb-4 sm:mb-6">
         What do you have available?
       </label>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {categories.map((category) => (
-          <div key={category} className="space-y-2 sm:space-y-3">
-            <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-muted">{category}</p>
+        {categories.map((category, catIndex) => (
+          <motion.div 
+            key={category} 
+            className="space-y-2 sm:space-y-3"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: catIndex * 0.1 }}
+          >
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">{category}</p>
             <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {spices
                 .filter((s) => s.category === category)
                 .map((spice) => (
-                  <label
+                  <motion.label
                     key={spice.id}
-                    className={`inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 cursor-pointer transition-all text-[10px] sm:text-xs font-medium uppercase tracking-wider border-2 ${
+                    className={`inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 cursor-pointer transition-all font-mono text-[10px] sm:text-xs uppercase tracking-wider border ${
                       selected.includes(spice.name)
-                        ? "bg-foreground text-background border-foreground"
-                        : "bg-transparent text-foreground border-border hover:border-foreground"
+                        ? "bg-accent text-white border-accent"
+                        : "bg-transparent text-foreground border-border hover:border-accent"
                     }`}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     <input
                       type="checkbox"
@@ -47,10 +56,10 @@ export function SpiceSelector({ spices, selected, onChange }: SpiceSelectorProps
                       className="sr-only"
                     />
                     {spice.name}
-                  </label>
+                  </motion.label>
                 ))}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

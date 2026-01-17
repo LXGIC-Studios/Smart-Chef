@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { IngredientInput } from "@/components/IngredientInput";
 import { SpiceSelector } from "@/components/SpiceSelector";
@@ -40,7 +41,7 @@ export default function GeneratePage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [userEmail, setUserEmail] = useState<string>();
+  const [, setUserEmail] = useState<string>();
   const [dietProfile, setDietProfile] = useState<DietProfile | null>(null);
   const [useDietProfile, setUseDietProfile] = useState(true);
   const supabase = createClient();
@@ -52,20 +53,17 @@ export default function GeneratePage() {
         setUserEmail(user.email);
       }
 
-      // Load spices
       const spicesRes = await fetch("/api/spices");
       if (spicesRes.ok) {
         const data = await spicesRes.json();
         setSpices(data);
       }
 
-      // Load diet profile
       const profileRes = await fetch("/api/diet-profile");
       if (profileRes.ok) {
         const profile = await profileRes.json();
         if (profile.dietary_restrictions?.length > 0 || profile.disliked_ingredients?.length > 0) {
           setDietProfile(profile);
-          // Pre-fill dietary from profile
           setDietary(profile.dietary_restrictions || []);
         }
       }
@@ -92,7 +90,6 @@ export default function GeneratePage() {
         spices: selectedSpices,
         dietary,
         style,
-        // Include diet profile data if enabled
         dislikedIngredients: useDietProfile && dietProfile ? dietProfile.disliked_ingredients : [],
         cuisinePreferences: useDietProfile && dietProfile ? dietProfile.cuisine_preferences : [],
         kitchenEquipment: useDietProfile && dietProfile ? dietProfile.kitchen_equipment : [],
@@ -138,81 +135,115 @@ export default function GeneratePage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pt-20">
       <Navbar />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
         {!recipe ? (
           <>
-            <div className="mb-8 sm:mb-12">
-              <p className="label text-xs sm:text-sm mb-2">Recipe Generator</p>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[0.9]">
+            <motion.div 
+              className="mb-8 sm:mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <motion.div
+                  className="w-2 h-2 rounded-full bg-success"
+                  animate={{ opacity: [1, 0.4, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">Recipe Generator</span>
+              </div>
+              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.9]">
                 What&apos;s in your
                 <br />
-                <span className="text-accent">kitchen?</span>
+                <span className="text-accent glow-signal">kitchen?</span>
               </h1>
-            </div>
+            </motion.div>
 
             <div className="space-y-8 sm:space-y-12">
-              <div className="pb-8 sm:pb-12 border-b border-border">
+              <motion.div 
+                className="pb-8 sm:pb-12 border-b border-border"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
                 <IngredientInput
                   ingredients={ingredients}
                   onChange={setIngredients}
                 />
-                <p className="text-xs sm:text-sm text-muted mt-4">
-                  <span className="text-foreground font-medium">Note:</span> We&apos;ll try to use all your ingredients, but may exclude items that don&apos;t work together.
+                <p className="font-mono text-xs text-muted mt-4">
+                  <span className="text-accent">$</span> We&apos;ll try to use all your ingredients, but may exclude items that don&apos;t work together.
                 </p>
-              </div>
+              </motion.div>
 
               {spices.length > 0 && (
-                <div className="pb-8 sm:pb-12 border-b border-border">
+                <motion.div 
+                  className="pb-8 sm:pb-12 border-b border-border"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
                   <SpiceSelector
                     spices={spices}
                     selected={selectedSpices}
                     onChange={setSelectedSpices}
                   />
-                </div>
+                </motion.div>
               )}
 
-              <div className="pb-8 sm:pb-12 border-b border-border">
-                <label className="label text-xs sm:text-sm block mb-4">Recipe Style</label>
+              <motion.div 
+                className="pb-8 sm:pb-12 border-b border-border"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted block mb-4">Recipe Style</label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                   {STYLE_OPTIONS.map((option) => (
-                    <button
+                    <motion.button
                       key={option.value}
                       type="button"
                       onClick={() => setStyle(option.value)}
-                      className={`px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium border-2 transition-all ${
+                      className={`px-3 sm:px-4 py-2 sm:py-3 font-mono text-xs uppercase tracking-wider border transition-all ${
                         style === option.value
-                          ? "bg-foreground text-background border-foreground"
-                          : "bg-transparent text-foreground border-border hover:border-foreground"
+                          ? "bg-accent text-white border-accent"
+                          : "bg-card/50 text-foreground border-border hover:border-accent"
                       }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       {option.label}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="pb-8 sm:pb-12 border-b border-border">
+              <motion.div 
+                className="pb-8 sm:pb-12 border-b border-border"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
                 <div className="flex items-center justify-between mb-4">
-                  <label className="label text-xs sm:text-sm">Dietary Restrictions</label>
+                  <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted">Dietary Restrictions</label>
                   {dietProfile && (
                     <button
                       onClick={() => setUseDietProfile(!useDietProfile)}
-                      className={`text-xs font-medium px-3 py-1 border transition-colors ${
+                      className={`font-mono text-xs px-3 py-1 border transition-colors ${
                         useDietProfile
                           ? "bg-accent text-white border-accent"
-                          : "border-border hover:border-foreground"
+                          : "border-border hover:border-accent"
                       }`}
                     >
-                      {useDietProfile ? "✓ Using Diet Profile" : "Use Diet Profile"}
+                      {useDietProfile ? "✓ Using Profile" : "Use Profile"}
                     </button>
                   )}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {DIETARY_OPTIONS.map((option) => (
-                    <button
+                    <motion.button
                       key={option}
                       type="button"
                       onClick={() => {
@@ -222,57 +253,71 @@ export default function GeneratePage() {
                           setDietary([...dietary, option]);
                         }
                       }}
-                      className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium border-2 transition-all ${
+                      className={`px-3 sm:px-4 py-1.5 sm:py-2 font-mono text-xs border transition-all ${
                         dietary.includes(option)
                           ? "bg-accent text-white border-accent"
-                          : "bg-transparent text-foreground border-border hover:border-foreground"
+                          : "bg-transparent text-foreground border-border hover:border-accent"
                       }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       {option}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
                 {dietary.length > 0 && (
-                  <p className="text-xs text-muted mt-3">
-                    Recipe will exclude: {dietary.join(", ")}
+                  <p className="font-mono text-xs text-muted mt-3">
+                    <span className="text-accent">→</span> Excluding: {dietary.join(", ")}
                   </p>
                 )}
                 {useDietProfile && dietProfile && dietProfile.disliked_ingredients?.length > 0 && (
-                  <p className="text-xs text-muted mt-2">
-                    Also avoiding (from profile): {dietProfile.disliked_ingredients.join(", ")}
+                  <p className="font-mono text-xs text-muted mt-2">
+                    <span className="text-accent">→</span> Also avoiding: {dietProfile.disliked_ingredients.join(", ")}
                   </p>
                 )}
                 {!dietProfile && (
-                  <p className="text-xs text-muted mt-3">
+                  <p className="font-mono text-xs text-muted mt-3">
                     <Link href="/settings/diet" className="text-accent hover:underline">
                       Set up your diet profile
                     </Link>{" "}
                     to auto-apply preferences
                   </p>
                 )}
-              </div>
+              </motion.div>
 
               {error && (
-                <p className="text-accent font-medium text-sm sm:text-base">{error}</p>
+                <motion.p 
+                  className="text-accent font-mono text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  {error}
+                </motion.p>
               )}
 
-              <button
+              <motion.button
                 onClick={handleGenerate}
-                className="btn-primary text-base sm:text-lg px-8 sm:px-12 py-4 sm:py-5 w-full sm:w-auto"
+                className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-accent hover:bg-accent/90 text-white font-mono text-sm uppercase tracking-wider transition-colors disabled:opacity-50"
                 disabled={loading || ingredients.length < 2}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-3">
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
+                    <motion.span
+                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
                     Generating...
                   </span>
                 ) : (
-                  "Generate Recipe"
+                  "Generate Recipe →"
                 )}
-              </button>
+              </motion.button>
             </div>
           </>
         ) : (

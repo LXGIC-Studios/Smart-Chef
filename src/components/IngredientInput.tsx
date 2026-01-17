@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, KeyboardEvent } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface IngredientInputProps {
   ingredients: string[];
@@ -31,7 +32,7 @@ export function IngredientInput({ ingredients, onChange }: IngredientInputProps)
 
   return (
     <div>
-      <label className="label text-xs sm:text-sm block mb-3 sm:mb-4">
+      <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted block mb-3 sm:mb-4">
         Your Ingredients
       </label>
       <div className="flex gap-2">
@@ -41,34 +42,45 @@ export function IngredientInput({ ingredients, onChange }: IngredientInputProps)
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type an ingredient..."
-          className="input text-sm sm:text-lg flex-1"
+          className="flex-1 bg-card/50 border border-border focus:border-accent px-4 py-3 font-mono text-sm outline-none transition-colors"
         />
-        <button
+        <motion.button
           type="button"
           onClick={addIngredient}
-          className="btn-secondary text-xs sm:text-sm px-3 sm:px-4 shrink-0"
+          className="px-4 sm:px-6 border border-border hover:border-accent font-mono text-xs uppercase tracking-wider transition-colors"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           Add
-        </button>
+        </motion.button>
       </div>
       {ingredients.length > 0 ? (
-        <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-4 sm:mt-6">
-          {ingredients.map((ingredient, index) => (
-            <span key={index} className="tag text-xs sm:text-sm">
-              {ingredient}
-              <button
-                onClick={() => removeIngredient(index)}
-                className="ml-1.5 sm:ml-2 hover:text-accent"
-                aria-label={`Remove ${ingredient}`}
+        <div className="flex flex-wrap gap-2 mt-4 sm:mt-6">
+          <AnimatePresence>
+            {ingredients.map((ingredient, index) => (
+              <motion.span 
+                key={ingredient} 
+                className="inline-flex items-center gap-2 bg-accent text-white px-3 py-1.5 font-mono text-xs uppercase tracking-wider"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.2 }}
               >
-                ×
-              </button>
-            </span>
-          ))}
+                {ingredient}
+                <button
+                  onClick={() => removeIngredient(index)}
+                  className="hover:text-black transition-colors"
+                  aria-label={`Remove ${ingredient}`}
+                >
+                  ×
+                </button>
+              </motion.span>
+            ))}
+          </AnimatePresence>
         </div>
       ) : (
-        <p className="text-xs sm:text-sm text-muted mt-3 sm:mt-4">
-          Add at least 2-3 ingredients to generate a recipe
+        <p className="font-mono text-xs text-muted mt-3 sm:mt-4">
+          <span className="text-accent">$</span> Add at least 2-3 ingredients to generate a recipe
         </p>
       )}
     </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { RecipeCard } from "@/components/RecipeCard";
 import { createClient } from "@/lib/supabase/client";
@@ -10,17 +11,11 @@ import type { Recipe } from "@/lib/types";
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
-  const [userEmail, setUserEmail] = useState<string>();
   const [filter, setFilter] = useState<"all" | "favorites" | "family">("all");
   const supabase = createClient();
 
   useEffect(() => {
     async function loadData() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.email) {
-        setUserEmail(user.email);
-      }
-
       const res = await fetch("/api/recipes");
       if (res.ok) {
         const data = await res.json();
@@ -75,87 +70,121 @@ export default function RecipesPage() {
   const familyCount = recipes.filter((r) => r.is_family_favorite).length;
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pt-20">
       <Navbar />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <div>
-            <p className="label text-xs sm:text-sm mb-2">Your Collection</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[0.9]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <motion.div
+                className="w-2 h-2 rounded-full bg-success"
+                animate={{ opacity: [1, 0.4, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">Your Collection</span>
+            </div>
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[0.9]">
               Saved
               <br />
-              <span className="text-accent">Recipes</span>
+              <span className="text-accent glow-signal">Recipes</span>
             </h1>
-          </div>
-          <Link href="/generate" className="btn-primary text-sm sm:text-base self-start sm:self-auto">
-            New Recipe
-          </Link>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <Link href="/generate" className="btn-tech inline-flex">
+              New Recipe →
+            </Link>
+          </motion.div>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-border">
-          <button
-            onClick={() => setFilter("all")}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider border-2 transition-all ${
-              filter === "all"
-                ? "bg-foreground text-background border-foreground"
-                : "bg-transparent text-foreground border-border hover:border-foreground"
-            }`}
-          >
-            All ({recipes.length})
-          </button>
-          <button
-            onClick={() => setFilter("favorites")}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider border-2 transition-all ${
-              filter === "favorites"
-                ? "bg-foreground text-background border-foreground"
-                : "bg-transparent text-foreground border-border hover:border-foreground"
-            }`}
-          >
-            ★ Favorites ({favoritesCount})
-          </button>
-          <button
-            onClick={() => setFilter("family")}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider border-2 transition-all ${
-              filter === "family"
-                ? "bg-foreground text-background border-foreground"
-                : "bg-transparent text-foreground border-border hover:border-foreground"
-            }`}
-          >
-            ♥ Family ({familyCount})
-          </button>
-        </div>
+        <motion.div 
+          className="flex flex-wrap gap-2 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-border"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {[
+            { key: "all", label: `All (${recipes.length})` },
+            { key: "favorites", label: `★ Favorites (${favoritesCount})` },
+            { key: "family", label: `♥ Family (${familyCount})` },
+          ].map((btn) => (
+            <motion.button
+              key={btn.key}
+              onClick={() => setFilter(btn.key as "all" | "favorites" | "family")}
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 font-mono text-xs uppercase tracking-wider border transition-all ${
+                filter === btn.key
+                  ? "bg-accent text-white border-accent"
+                  : "bg-transparent text-foreground border-border hover:border-accent"
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {btn.label}
+            </motion.button>
+          ))}
+        </motion.div>
 
         {loading ? (
           <div className="py-16 sm:py-24 text-center">
-            <p className="text-muted uppercase tracking-wider text-xs sm:text-sm">Loading...</p>
+            <motion.div
+              className="flex items-center justify-center gap-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <motion.span
+                className="w-5 h-5 border-2 border-accent/30 border-t-accent rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              />
+              <span className="font-mono text-xs uppercase tracking-widest text-muted">Loading...</span>
+            </motion.div>
           </div>
         ) : filteredRecipes.length === 0 ? (
-          <div className="py-12 sm:py-24 px-4 text-center border border-border">
+          <motion.div 
+            className="py-12 sm:py-24 px-4 text-center border border-border bg-card/30"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
             {filter === "all" ? (
               <>
-                <p className="text-muted text-sm sm:text-base mb-4 sm:mb-6">No saved recipes yet</p>
-                <Link href="/generate" className="btn-primary text-sm sm:text-base">
-                  Generate Your First Recipe
+                <p className="font-mono text-sm text-muted mb-6">No saved recipes yet</p>
+                <Link href="/generate" className="btn-tech inline-flex">
+                  Generate Your First Recipe →
                 </Link>
               </>
             ) : (
-              <p className="text-muted text-sm sm:text-base">
-                No {filter === "favorites" ? "favorites" : "family favorites"} yet. 
+              <p className="font-mono text-sm text-muted">
+                No {filter === "favorites" ? "favorites" : "family favorites"} yet.
+                <br />
                 Mark recipes using the buttons below each recipe.
               </p>
             )}
-          </div>
+          </motion.div>
         ) : (
           <div>
-            {filteredRecipes.map((recipe) => (
-              <RecipeCard
+            {filteredRecipes.map((recipe, index) => (
+              <motion.div
                 key={recipe.id}
-                recipe={recipe}
-                onDelete={handleDelete}
-                onToggleFavorite={handleToggleFavorite}
-                onToggleFamilyFavorite={handleToggleFamilyFavorite}
-              />
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+              >
+                <RecipeCard
+                  recipe={recipe}
+                  onDelete={handleDelete}
+                  onToggleFavorite={handleToggleFavorite}
+                  onToggleFamilyFavorite={handleToggleFamilyFavorite}
+                />
+              </motion.div>
             ))}
           </div>
         )}

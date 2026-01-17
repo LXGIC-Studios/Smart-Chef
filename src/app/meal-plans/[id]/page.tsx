@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { AddToListButton } from "@/components/AddToListButton";
 import { createClient } from "@/lib/supabase/client";
@@ -96,10 +97,21 @@ export default function MealPlanDetailPage({ params }: { params: Promise<{ id: s
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background pt-20">
         <Navbar />
         <div className="max-w-5xl mx-auto px-6 md:px-8 py-24 text-center">
-          <p className="text-muted uppercase tracking-wider text-sm">Loading...</p>
+          <motion.div
+            className="flex items-center justify-center gap-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <motion.span
+              className="w-5 h-5 border-2 border-accent/30 border-t-accent rounded-full"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+            <span className="font-mono text-xs uppercase tracking-widest text-muted">Loading...</span>
+          </motion.div>
         </div>
       </main>
     );
@@ -107,12 +119,12 @@ export default function MealPlanDetailPage({ params }: { params: Promise<{ id: s
 
   if (!plan) {
     return (
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background pt-20">
         <Navbar />
         <div className="max-w-5xl mx-auto px-6 md:px-8 py-24 text-center">
-          <p className="text-muted mb-6">Meal plan not found</p>
-          <Link href="/meal-plans" className="btn-primary">
-            Back to Meal Plans
+          <p className="font-mono text-sm text-muted mb-6">Meal plan not found</p>
+          <Link href="/meal-plans" className="btn-tech inline-flex">
+            ← Back to Meal Plans
           </Link>
         </div>
       </main>
@@ -122,28 +134,41 @@ export default function MealPlanDetailPage({ params }: { params: Promise<{ id: s
   const data = plan.plan_data;
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background pt-20">
       <Navbar />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16">
         <Link 
           href="/meal-plans" 
-          className="inline-block mb-6 sm:mb-8 text-xs sm:text-sm font-bold uppercase tracking-wider hover:text-accent transition-colors"
+          className="inline-block mb-6 sm:mb-8 font-mono text-xs uppercase tracking-wider text-muted hover:text-accent transition-colors"
         >
           ← Back to Meal Plans
         </Link>
 
-        <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black mb-2">
+        <motion.div 
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <motion.div
+              className="w-2 h-2 rounded-full bg-success"
+              animate={{ opacity: [1, 0.4, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted">Meal Plan</span>
+          </div>
+          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
             {plan.title}
           </h1>
-          <p className="text-muted">{plan.description}</p>
-          <div className="flex flex-wrap gap-4 mt-4 text-sm">
-            <span className="text-muted"><strong className="text-foreground">{plan.people}</strong> people</span>
-            <span className="text-muted"><strong className="text-foreground">{plan.days}</strong> days</span>
-            <span className="text-accent font-bold">~{plan.total_prep_time_hours}h prep</span>
+          <p className="font-mono text-sm text-muted">{plan.description}</p>
+          <div className="flex flex-wrap gap-4 mt-4 font-mono text-xs">
+            <span className="text-muted"><span className="text-accent">{plan.people}</span> people</span>
+            <span className="text-muted"><span className="text-accent">{plan.days}</span> days</span>
+            <span className="text-accent">~{plan.total_prep_time_hours}h prep</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Grocery List */}
         <div className="mb-12 p-6 bg-card border border-border">
